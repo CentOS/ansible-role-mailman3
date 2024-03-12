@@ -1,1 +1,22 @@
 # Defaults variables for role mailman3
+
+# Database settings (MySQL)
+mailman3_db_user: mailman3
+mailman3_db_pass: XW0kzPcS8BArAT
+mailman3_db_name: mailman3
+
+# Mailman core settings
+mailman3_site_owner: root@localhost.localdomain
+mailman3_rest_api_user: restadmin
+mailman3_rest_api_pass: restpass
+
+# Postorius/Hyperkitty django webui settings
+mailman3_django_secret_key: pZzukiE1dDVW1UGNjwVnSHR0yn
+mailman3_django_debug: False
+mailman3_django_db_name: mailmanweb
+mailman3_django_db_user: mailmanweb
+mailman3_django_db_pass: qadvqjR5R7kNiD
+mailman3_archiver_key: hmG8uw6YlHpNoBjndCrAhZWo
+
+# Directory where to store static files
+mailman3_static_root: /var/www/mailman-static

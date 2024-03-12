@@ -8,3 +8,107 @@
   tags:
     - vars
 
+
+# Importing first postfix as mailman uses postmap to start its service
+- ansible.builtin.include_role:
+    name: postfix
+
+- ansible.builtin.include_role:
+    name: mysql
+
+- name: Setting up MySQL DB for mailman3
+  community.mysql.mysql_db:
+    db: "{{ mailman3_db_name }}"
+    state: present
+  tags:
+    - mysql
+
+- name: Granting mysql db right for mailman user
+  community.mysql.mysql_user:
+    name: "{{ mailman3_db_user }}"
+    password: "{{ mailman3_db_pass }}"
+    priv: "{{ mailman3_db_name }}.*:ALL"
+    state: present
+  tags:
+    - mysql
+
+- name: Installing required mailman3 packages
+  yum: 
+    name: "{{ mailman3_pkgs }}"
+    state: installed
+
+- name: Configuring mailman3 core
+  template:
+    src: mailman.cfg.j2
+    dest: /etc/mailman.cfg
+    owner: mailman
+    group: mailman
+    mode: '0640'
+  notify:
+    - restart_mailman3_core
+  tags:
+    - config
+
+
+# Postorius/Hyperkitty config
+# These are django applications 
+
+# First creating needed separated DB
+- name: Setting up MySQL DB for mailman django apps
+  community.mysql.mysql_db:
+    db: "{{ mailman3_django_db_name }}"
+    state: present
+  tags:
+    - mysql
+
+- name: Granting mysql db right for mailman django apps
+  community.mysql.mysql_user:
+    name: "{{ mailman3_django_db_user }}"
+    password: "{{ mailman3_django_db_pass }}"
+    priv: "{{ mailman3_django_db_name }}.*:ALL"
+    state: present
+  tags:
+    - mysql
+
+- name: Distributing needed config files for mailman-web/postorius
+  template:
+    src: "postorius/{{ item }}.j2"
+    dest: "/etc/mailman3/{{ item }}"
+  with_items:
+    - settings.py
+    - urls.py
+  tags:
+    - postorius
+    - config
+
+- name: Ensuring we have correct DB schema for django apps
+  command:
+    cmd: mailman-web migrate
+    chdir: /etc/mailman3
+  become_user: mailman  
+  tags:
+    - db
+    - django
+
+# hyperkitty archiver settings, imported by mailman
+- name: Configuring hyperkitty archiver plugin
+  template:
+    src: hyperkitty/hyperkitty.cfg.j2
+    dest: /etc/mailman3.d/hyperkitty.cfg
+    owner: mailman
+    group: mailman
+    mode: '0640'
+  notify:
+    - restart_mailman3_core
+  tags:
+    - config
+
+- name: Ensuring we have static root dir for django
+  file:
+    path: "{{ mailman3_static_root }}"
+    state: directory
+    owner: mailman
+    group: mailman
+    mode: '0755'
+  tags:
+    - config

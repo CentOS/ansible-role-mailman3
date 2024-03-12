@@ -1,0 +1,43 @@
+# This is the mailman3 main configuration file
+# Configured by Ansible
+
+[mailman]
+# This address is the "site owner" address.  Certain messages which must be
+# delivered to a human, but which can't be delivered to a list owner (e.g. a
+# bounce from a list owner), will be sent to this address.  It should point to
+# a human.
+site_owner: {{ mailman3_site_owner }}
+
+# The local URL part to the administration interface (Postorius).
+# The full URL will be constructed by prepending the domain URL set in the
+# list's domain properties.
+listinfo_url = /postorius/
+
+
+# Set the paths to be Fedora-compliant
+layout: fhs
+[paths.fhs]
+bin_dir: /usr/libexec/mailman3
+var_dir: /var/lib/mailman3
+queue_dir: /var/spool/mailman3
+log_dir: /var/log/mailman3
+lock_dir: /run/lock/mailman3
+ext_dir: /etc/mailman3.d
+pid_file: /run/mailman3/master.pid
+
+
+[database]
+class: mailman.database.mysql.MySQLDatabase
+url: mysql+pymysql://{{ mailman3_db_user }}:{{ mailman3_db_pass}}@localhost/{{ mailman3_db_name }}?charset=utf8mb4&use_unicode=1
+
+[webservice]
+hostname: localhost
+port: 8001
+admin_user: {{ mailman3_rest_api_user }}
+admin_pass: {{ mailman3_rest_api_pass }}
+
+# Hyperkitty settings
+[archiver.hyperkitty]
+class: mailman_hyperkitty.Archiver
+enable: yes
+configuration: /etc/mailman3.d/hyperkitty.cfg
