@@ -9,6 +9,29 @@ mailman3_db_name: mailman3
 mailman3_site_owner: root@localhost.localdomain
 mailman3_rest_api_user: restadmin
 mailman3_rest_api_pass: restpass
+mailman3_rest_api_workers: 2
+mailman3_log_directory: /var/log/mailman3
+# see https://docs.mailman3.org/projects/mailman/en/latest/src/mailman/config/docs/config.html#schema-cfg
+# can be classical python levels, like info, warning, debug
+mailman3_log_level: info
+mailman3_log_items:
+  - archiver
+  - bounce
+  - config
+  - database
+  - http
+  - runner
+  - smtp
+  - subscribe
+  - task
+# mta/smtp/lmtp settings
+mailman3_smtp_host: localhost
+mailman3_smtp_port: 25
+mailman3_smtp_user: ''
+mailman3_smtp_pass: ''
+mailman3_lmtp_host: localhost
+mailman3_lmtp_port: 8024
+
 
 # Postorius/Hyperkitty django webui settings
 mailman3_django_secret_key: pZzukiE1dDVW1UGNjwVnSHR0yn
@@ -17,6 +40,7 @@ mailman3_django_db_name: mailmanweb
 mailman3_django_db_user: mailmanweb
 mailman3_django_db_pass: qadvqjR5R7kNiD
 mailman3_archiver_key: hmG8uw6YlHpNoBjndCrAhZWo
+mailman3_gunicorn_workers: 4
 
 # Directory where to store static files
 mailman3_static_root: /var/www/mailman-static

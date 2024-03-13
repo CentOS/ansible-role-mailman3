@@ -4,4 +4,8 @@
   service:
     name: mailman3
     state: restarted
-    
+
+- name: restart_mailmanweb
+  service:
+    name: mailmanweb
+    state: restarted

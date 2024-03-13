@@ -11,7 +11,7 @@ DEBUG = False
 {% endif %}
 
 # Mailman core settings (postorius/hyperkitty will need to interact over rest api)
-MAILMAN_REST_API_URL='http://localhost:8001/'
+MAILMAN_REST_API_URL = 'http://localhost:8001/'
 MAILMAN_REST_API_USER = '{{ mailman3_rest_api_user }}'
 MAILMAN_REST_API_PASS = '{{ mailman3_rest_api_pass }}'
 MAILMAN_ARCHIVER_KEY = '{{ mailman3_archiver_key }}'
@@ -60,8 +60,8 @@ INSTALLED_APPS = (
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.openid',
-    'django_mailman3.lib.auth.fedora',
+    #'allauth.socialaccount.providers.openid',
+    #'django_mailman3.lib.auth.fedora',
     #'allauth.socialaccount.providers.github',
     #'allauth.socialaccount.providers.gitlab',
     #'allauth.socialaccount.providers.google',

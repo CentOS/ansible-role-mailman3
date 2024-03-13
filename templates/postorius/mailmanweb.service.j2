@@ -1,0 +1,16 @@
+
+[Unit]
+Description=mailmanweb
+DefaultDependencies=no
+After=network.target
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+Type=simple
+User=mailman
+Group=mailman
+WorkingDirectory=/etc/mailman3
+ExecStart=/usr/bin/gunicorn --workers={{ mailman3_gunicorn_workers }} mailman_web.wsgi
+ExecStop=/bin/kill -s TERM $MAINPID

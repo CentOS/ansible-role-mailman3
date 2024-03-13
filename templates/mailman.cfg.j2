@@ -35,9 +35,34 @@ hostname: localhost
 port: 8001
 admin_user: {{ mailman3_rest_api_user }}
 admin_pass: {{ mailman3_rest_api_pass }}
+workers: {{ mailman3_rest_api_workers }}
 
 # Hyperkitty settings
 [archiver.hyperkitty]
 class: mailman_hyperkitty.Archiver
 enable: yes
 configuration: /etc/mailman3.d/hyperkitty.cfg
+
+# Logging part
+# see https://docs.mailman3.org/projects/mailman/en/latest/src/mailman/config/docs/config.html#schema-cfg
+# Configured by ansible to log to specific files in one directory
+
+{% for item in mailman3_log_items %}
+
+[loggin.{{ item }}]
+level: {{ mailman3_log_level }}
+path: {{ mailman3_log_directory }}/{{ item }}.log
+
+{% endfor %}
+
+
+# SMTP/MTA settings
+[mta]
+# how to send outside
+smtp_host: {{ mailman3_smtp_host }}
+smtp_port: {{ mailman3_smtp_port }}
+smtp_user: {{ mailman3_smtp_user }}
+smtp_pass: {{ mailman3_smtp_pass }}
+# port to open for postfix => mailman
+lmtp_host: {{ mailman3_lmtp_host }}
+lmtp_port: {{ mailman3_lmtp_port }}
