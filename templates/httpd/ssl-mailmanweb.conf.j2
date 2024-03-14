@@ -1,0 +1,53 @@
+<VirtualHost *:443>
+ ServerAdmin webmaster@centos.org
+ ServerName {{ mailman3_httpd_hostname }}
+ DocumentRoot /var/www/html
+
+ Header always set Strict-Transport-Security "max-age=31536000"  
+ Header always set X-Frame-Options "SAMEORIGIN"
+ Header always set X-Xss-Protection "1; mode=block"
+ Header always set X-Content-Type-Options "nosniff"
+ Header always set Referrer-Policy "same-origin"
+
+	
+Alias /favicon.ico {{ mailman3_static_root }}/favicon.ico
+Alias /robots.txt  {{ mailman3_static_root }}/robots.txt
+Alias /static      {{ mailman3_static_root }}/
+
+ProxyPreserveHost On
+ProxyRequests off
+# Not redirecting/proxying static content (served locally)
+ProxyPass /static !
+# Proxying to gunicorn mailmanweb backend
+ProxyPass / http://127.0.0.1:8000/
+ProxyPassReverse / http://127.0.0.1:8000/
+
+<Directory "{{ mailman3_static_root }}">
+    Order deny,allow
+    Allow from all
+    Require all granted
+</Directory>
+
+
+ErrorLog logs/ssl-{{ mailman3_httpd_hostname }}_error.log
+TransferLog logs/ssl-{{ mailman3_httpd_hostname }}_access.log
+LogLevel warn
+SSLEngine on
+{{ httpd_tls_ciphers }}
+
+SSLCertificateFile /etc/pki/tls/certs/{{ mailman3_httpd_hostname }}.crt
+SSLCertificateKeyFile /etc/pki/tls/private/{{ mailman3_httpd_hostname }}.key
+SSLCertificateChainFile /etc/pki/tls/certs/{{ mailman3_httpd_hostname }}-CAChain.crt
+
+<Files ~ "\.(cgi|shtml|phtml|php3?)$">
+    SSLOptions +StdEnvVars
+</Files>
+<Directory "/var/www/cgi-bin">
+    SSLOptions +StdEnvVars
+</Directory>
+SetEnvIf User-Agent ".*MSIE.*" \
+         nokeepalive ssl-unclean-shutdown \
+         downgrade-1.0 force-response-1.0
+CustomLog logs/ssl-{{ mailman3_httpd_hostname }}_request.log \
+          "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
+</VirtualHost>   

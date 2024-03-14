@@ -20,6 +20,7 @@ MAILMAN_ARCHIVER_FROM = ('127.0.0.1', '::1')
 ALLOWED_HOSTS = [
     "localhost", # Archiving API from Mailman
     "127.0.0.1", # httpd proxy
+    "{{ mailman3_httpd_hostname }}", # external fqdn through proxy
 ]
 	
 ROOT_URLCONF = 'urls'

@@ -1,0 +1,13 @@
+<VirtualHost *:80>
+   ServerName {{ mailman3_httpd_hostname }}
+   DocumentRoot /var/www/html/
+   CustomLog logs/{{ mailman3_httpd_hostname }}.log combined
+   ErrorLog logs/{{ mailman3_httpd_hostname }}_error.log
+
+   RewriteEngine On
+   RewriteCond $1 !^.well-known
+   RewriteCond %{HTTPS} !=on
+   RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]
+
+</VirtualHost>
+

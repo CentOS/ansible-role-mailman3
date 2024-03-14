@@ -44,3 +44,6 @@ mailman3_gunicorn_workers: 4
 
 # Directory where to store static files
 mailman3_static_root: /var/www/mailman-static
+
+# Proxying through httpd/apache (ending TLS connection)
+mailman3_httpd_hostname: lists.dev.centos.org

@@ -122,8 +122,17 @@
     owner: mailman
     group: mailman
     mode: '0755'
+  register: static_root_dir  
   tags:
     - config
+
+- name: Populating static_root dir with django files/css
+  command:
+    cmd: mailman-web collectstatic --no-input
+    chdir: /etc/mailman3
+  become_user: mailman
+  when: 
+    - static_root_dir is changed
 
 - name: systemd unit to start postorius/hyperkitty through gunicorn
   ansible.builtin.template:
@@ -142,3 +151,34 @@
     enabled: yes
   tags:
     - systemd
+
+# httpd/revproxy part
+- block:
+    - import_role:
+        name: httpd
+      vars:
+        - httpd_tls: True
+
+    - include_role:
+        name: httpd
+        tasks_from: pki-tls
+      vars:
+        pki_hostname: "{{ mailman3_httpd_hostname }}"
+
+    - name: Import needed httpd configurations
+      template:
+        src: "httpd/{{ item }}.j2"
+        dest: "/etc/httpd/conf.d/{{ item }}"
+      with_items:
+        - mailmanweb.conf
+        - ssl-mailmanweb.conf
+      notify:
+        - restart_httpd
+      tags:
+        - httpd-config
+
+  tags:
+    - httpd
+    
+      
+    
