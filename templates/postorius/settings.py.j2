@@ -1,3 +1,6 @@
+# Managed by Ansible
+# Don't edit !
+
 import os
 
 # SECURITY WARNING: keep the secret key used in production secret
@@ -160,3 +163,21 @@ COMPRESS_OFFLINE = True
 
 # We don't want to only show lists for domain matching httpd webserver name
 FILTER_VHOST = False
+
+
+# Django tasks queue
+# https://docs.mailman3.org/en/latest/config-web.html#running-the-task-queue
+Q_CLUSTER = {
+   'retry': 360,
+   'timeout': 300,
+   'save_limit': 100,
+   'orm': 'default',
+}
+
+# Enabling memcached cache
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
+        'LOCATION': '127.0.0.1:11211',
+    }
+}

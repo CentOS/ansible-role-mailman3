@@ -89,6 +89,7 @@
   with_items:
     - settings.py
     - urls.py
+  notify: restart_mailmanweb
   tags:
     - postorius
     - config
@@ -151,6 +152,14 @@
     enabled: yes
   tags:
     - systemd
+
+- name: Enable local memcached instance
+  ansible.builtin.systemd:
+    name: memcached
+    state: started
+    enabled: yes
+  tags:
+    - cache
 
 # httpd/revproxy part
 - block:

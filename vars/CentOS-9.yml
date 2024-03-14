@@ -9,4 +9,6 @@ mailman3_pkgs:
   - httpd
   - sassc
   - python3-gunicorn
+  - memcached
+  - python3-pylibmc
 
