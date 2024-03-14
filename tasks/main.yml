@@ -38,7 +38,7 @@
     state: installed
 
 - name: Configuring mailman3 core
-  template:
+  ansible.builtin.template:
     src: mailman.cfg.j2
     dest: /etc/mailman.cfg
     owner: mailman
@@ -50,14 +50,14 @@
     - config
 
 - name: Ensuring log directory exists
-  file:
+  ansible.builtin.file:
     path: "{{ mailman3_log_directory }}"
     state: directory
     owner: mailman
     group: mailman
 
 - name: Ensuring mailman-core is started
-  service:
+  ansible.builtin.service:
     name: mailman3
     state: started
     enabled: True
@@ -83,7 +83,7 @@
     - mysql
 
 - name: Distributing needed config files for mailman-web/postorius
-  template:
+  ansible.builtin.template:
     src: "postorius/{{ item }}.j2"
     dest: "/etc/mailman3/{{ item }}"
   with_items:
@@ -95,7 +95,7 @@
     - config
 
 - name: Ensuring we have correct DB schema for django apps
-  command:
+  ansible.builtin.command:
     cmd: mailman-web migrate
     chdir: /etc/mailman3
   become_user: mailman  
@@ -105,7 +105,7 @@
 
 # hyperkitty archiver settings, imported by mailman
 - name: Configuring hyperkitty archiver plugin
-  template:
+  ansible.builtin.template:
     src: hyperkitty/hyperkitty.cfg.j2
     dest: /etc/mailman3.d/hyperkitty.cfg
     owner: mailman
@@ -117,7 +117,7 @@
     - config
 
 - name: Ensuring we have static root dir for django
-  file:
+  ansible.builtin.file:
     path: "{{ mailman3_static_root }}"
     state: directory
     owner: mailman
@@ -128,7 +128,7 @@
     - config
 
 - name: Populating static_root dir with django files/css
-  command:
+  ansible.builtin.command:
     cmd: mailman-web collectstatic --no-input
     chdir: /etc/mailman3
   become_user: mailman
@@ -162,7 +162,7 @@
     - cache
 
 - name: Distributing mailman-web cron jobs
-  template:
+  ansible.builtin.template:
     src: postorius/mailman-web-cron.j2
     dest: /etc/cron.d/mailman-web
   notify:
@@ -173,19 +173,19 @@
 
 # httpd/revproxy part
 - block:
-    - import_role:
+    - ansible.builtin.import_role:
         name: httpd
       vars:
         - httpd_tls: True
 
-    - include_role:
+    - ansible.builtin.include_role:
         name: httpd
         tasks_from: pki-tls
       vars:
         pki_hostname: "{{ mailman3_httpd_hostname }}"
 
     - name: Import needed httpd configurations
-      template:
+      ansible.builtin.template:
         src: "httpd/{{ item }}.j2"
         dest: "/etc/httpd/conf.d/{{ item }}"
       with_items:
