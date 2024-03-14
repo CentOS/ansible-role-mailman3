@@ -1,0 +1,12 @@
+# Managed by Ansible
+# See https://docs.mailman3.org/en/latest/config-web.html#scheduled-tasks-required for details
+
+@hourly  mailman  /usr/bin/mailman-web runjobs hourly
+@daily   mailman  /usr/bin/mailman-web runjobs daily
+@weekly  mailman  /usr/bin/mailman-web runjobs weekly
+@monthly mailman  /usr/bin/mailman-web runjobs monthly
+@yearly  mailman  /usr/bin/mailman-web runjobs yearly
+* * * * *  mailman  /usr/bin/mailman-web runjobs minutely
+2,17,32,47 * * * * mailman  /usr/bin/mailman-web runjobs quarter_hourly
+
+

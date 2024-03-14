@@ -61,6 +61,7 @@ INSTALLED_APPS = (
     'compressor',
     'django_mailman3',
     'django_gravatar',
+    'django_extensions',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -181,3 +182,13 @@ CACHES = {
         'LOCATION': '127.0.0.1:11211',
     }
 }
+
+# How to send mail outside
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = '{{ mailman3_smtp_host }}'
+EMAIL_PORT = {{ mailman3_smtp_port }}
+EMAIL_HOST_USER = '{{ mailman3_smtp_user }}'
+EMAIL_HOST_PASSWORD = '{{ mailman3_smtp_pass }}'
+
+SERVER_EMAIL = '{{ mailman3_site_owner }}'
+DEFAULT_FROM_EMAIL = "{{ mailman3_site_owner }}"

@@ -161,6 +161,16 @@
   tags:
     - cache
 
+- name: Distributing mailman-web cron jobs
+  template:
+    src: postorius/mailman-web-cron.j2
+    dest: /etc/cron.d/mailman-web
+  notify:
+    - reload_crond
+
+  tags:
+    - cron
+
 # httpd/revproxy part
 - block:
     - import_role:

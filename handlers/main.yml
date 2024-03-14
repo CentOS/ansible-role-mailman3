@@ -9,3 +9,8 @@
   service:
     name: mailmanweb
     state: restarted
+
+- name: reload_crond
+  service:
+    name: crond
+    state: reloaded
