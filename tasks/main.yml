@@ -171,6 +171,31 @@
   tags:
     - cron
 
+- name: systemd units for django qcluster tasks queue and preload
+  ansible.builtin.template:
+    src: "postorius/{{ item }}.j2"
+    dest: "/etc/systemd/system/{{ item }}"
+  register: qcluster_systemd
+  with_items:
+    - hyperkitty-warmupcache.service
+    - mailmanweb-qcluster.service
+  tags:
+    - systemd 
+    - qcluster
+
+- name: Enable the qcluster services
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    daemon-reload: "{% if qcluster_systemd is changed %}yes{% else %}no{% endif %}"
+    state: started
+    enabled: yes
+  with_items:
+    - hyperkitty-warmupcache
+    - mailmanweb-qcluster
+  tags:
+    - systemd
+    - qcluster
+
 # httpd/revproxy part
 - block:
     - ansible.builtin.import_role:

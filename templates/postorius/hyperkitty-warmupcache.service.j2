@@ -1,0 +1,16 @@
+
+[Unit]
+Description=Hyperkitty warm up cache
+DefaultDependencies=no
+Requires=memcached.service
+After=memcached.service
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+Type=oneshot
+User=mailman
+Group=mailman
+WorkingDirectory=/etc/mailman3
+ExecStart=/usr/bin/mailman-web hyperkitty_warm_up_cache

@@ -1,6 +1,6 @@
 
 [Unit]
-Description= Mailman Web ui
+Description=Mailman web UI async tasks runner
 DefaultDependencies=no
 After=network.target
 
@@ -12,5 +12,5 @@ Type=simple
 User=mailman
 Group=mailman
 WorkingDirectory=/etc/mailman3
-ExecStart=/usr/bin/gunicorn --workers={{ mailman3_gunicorn_workers }} mailman_web.wsgi
+ExecStart=/usr/bin/mailman-web qcluster
 ExecStop=/bin/kill -s TERM $MAINPID
