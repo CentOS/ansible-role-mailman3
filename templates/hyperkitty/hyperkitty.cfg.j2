@@ -6,7 +6,8 @@
 # better if it is not.
 # However, if your Mailman installation is accessed via HTTPS, the URL needs
 # to match your SSL certificate (e.g. https://lists.example.com/hyperkitty).
-base_url: http://localhost/hyperkitty/
+# Pointing directly to gunicorn port (localhost)
+base_url: http://localhost:8000/hyperkitty/
 
 # The shared api_key, must be identical except for quoting to the value of
 # MAILMAN_ARCHIVER_KEY in HyperKitty's settings.

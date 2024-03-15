@@ -12,6 +12,8 @@
 # Importing first postfix as mailman uses postmap to start its service
 - ansible.builtin.include_role:
     name: postfix
+  vars:
+    - postfix_mailman3_host: True
 
 - ansible.builtin.include_role:
     name: mysql

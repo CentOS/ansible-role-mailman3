@@ -14,6 +14,10 @@ Alias /favicon.ico {{ mailman3_static_root }}/favicon.ico
 Alias /robots.txt  {{ mailman3_static_root }}/robots.txt
 Alias /static      {{ mailman3_static_root }}/
 
+# Redirecting to hyperkitty if nothing is specified
+RewriteEngine on
+RewriteRule  ^/$    /hyperkitty [R,L] 
+
 ProxyPreserveHost On
 ProxyRequests off
 # Not redirecting/proxying static content (served locally)
