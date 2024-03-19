@@ -106,6 +106,25 @@
     - django
 
 # hyperkitty archiver settings, imported by mailman
+- name: Enable local memcached instance
+  ansible.builtin.systemd:
+    name: memcached
+    state: started
+    enabled: yes
+  tags:
+    - cache
+
+- name: Ensuring we have directory for full-text/whoosh indexes
+  ansible.builtin.file:
+    path: /var/lib/mailman3/indexes
+    state: directory
+    owner: mailman
+    group: mailman
+    mode: '0755'
+  tags:
+    - config
+    - haystack
+
 - name: Configuring hyperkitty archiver plugin
   ansible.builtin.template:
     src: hyperkitty/hyperkitty.cfg.j2
@@ -154,14 +173,6 @@
     enabled: yes
   tags:
     - systemd
-
-- name: Enable local memcached instance
-  ansible.builtin.systemd:
-    name: memcached
-    state: started
-    enabled: yes
-  tags:
-    - cache
 
 - name: Distributing mailman-web cron jobs
   ansible.builtin.template:
@@ -223,6 +234,15 @@
       tags:
         - httpd-config
 
+    - name: Authorizing httpd to connect to gunicorn
+      seboolean:
+        name: httpd_can_network_connect
+        state: True
+        persistent: True
+      notify:
+        - restart_httpd
+      tags:
+        - selinux
   tags:
     - httpd
     
