@@ -47,3 +47,13 @@ mailman3_static_root: /var/www/mailman-static
 
 # Proxying through httpd/apache (ending TLS connection)
 mailman3_httpd_hostname: lists.dev.centos.org
+
+# OpenID-connect settings
+# Attention that you should ensure that callback/redirect_url set at the provider side will end with /
+# see https://docs.allauth.org/en/latest/socialaccount/providers/openid_connect.html#openid-connect
+mailman3_auth_openidc: True
+mailman3_openidc_provider_id: centos
+mailman3_openidc_name: CentOS Account
+mailman3_openidc_server_url: https://id.centos.org/idp/openidc
+mailman3_openidc_client_id: mailman3
+mailman3_openidc_secret: boooooooooooooyoushouldnotreadthisasnotused
