@@ -247,4 +247,13 @@
     - httpd
     
       
-    
+- name: Ensuring backup user and jobs
+  include_role:
+    name: centos-backup
+    tasks_from: client
+  vars:
+    - centos_role: mailman3
+    - role_backup_folders:
+        - /var/lib/mailman3
+  tags:
+    - backup

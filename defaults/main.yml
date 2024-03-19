@@ -25,7 +25,7 @@ mailman3_log_items:
   - subscribe
   - task
 # mta/smtp/lmtp settings
-mailman3_smtp_host: localhost
+mailman3_smtp_host: 127.0.0.1
 mailman3_smtp_port: 25
 mailman3_smtp_user: ''
 mailman3_smtp_pass: ''

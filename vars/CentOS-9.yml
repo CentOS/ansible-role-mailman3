@@ -4,7 +4,7 @@ mailman3_pkgs:
   - postorius
   - python3-mailmanclient
   - python3-mailman-web
-  #- python3-mailman-hyperkitty
+  - python3-mailman-hyperkitty
   - python3-cmarkgfm
   - python3-mysqlclient
   - httpd
