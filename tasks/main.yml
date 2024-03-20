@@ -231,6 +231,19 @@
     - systemd
     - qcluster
 
+- block:
+    - name: Importing hyperkitty centos logo
+      copy:
+        src: hyperkitty/centos-lists.png
+        dest: "{{ mailman3_static_root }}/centos-lists.png"
+
+    - name: Customizing hyperkitty navbar
+      copy:
+        src: hyperkitty/navbar-brand.html
+        dest: /usr/lib/python3.9/site-packages/hyperkitty/templates/hyperkitty/navbar-brand.html
+  tags:
+    - logos
+
 # httpd/revproxy part
 - block:
     - ansible.builtin.import_role:
