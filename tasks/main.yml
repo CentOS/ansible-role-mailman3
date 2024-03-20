@@ -34,6 +34,13 @@
   tags:
     - mysql
 
+- name: Using specific tag/repo for mailman3 packages
+  ansible.builtin.template:
+    src: templates/etc/yum.repos.d/centos-mailman3.repo.j2
+    dest: /etc/yum.repos.d/centos-mailman3.repo
+  tags:
+    - yum
+
 - name: Installing required mailman3 packages
   yum: 
     name: "{{ mailman3_pkgs }}"
