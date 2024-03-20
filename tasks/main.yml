@@ -46,6 +46,20 @@
     name: "{{ mailman3_pkgs }}"
     state: installed
 
+- name: Systemd snippet directory
+  file:
+    path: /etc/systemd/system/mailman3.service.d/
+    state: directory
+
+- name: Ensuring mailman3 is started after mysqld
+  template:
+    src: etc/systemd/system/mailman3.service.d/override.conf.j2
+    dest: /etc/systemd/system/mailman3.service.d/override.conf
+    mode: 0644
+  register: mailman3_systemd_override  
+  notify:
+    - restart_mailman3_core
+
 - name: Configuring mailman3 core
   ansible.builtin.template:
     src: mailman.cfg.j2
@@ -66,9 +80,10 @@
     group: mailman
 
 - name: Ensuring mailman-core is started
-  ansible.builtin.service:
+  ansible.builtin.systemd:
     name: mailman3
     state: started
+    daemon-reload: "{% if mailman3_systemd_override is changed %}yes{% else %}no{% endif %}"
     enabled: True
 
 # Postorius/Hyperkitty config
