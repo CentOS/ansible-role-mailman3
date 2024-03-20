@@ -280,8 +280,17 @@
         - selinux
   tags:
     - httpd
-    
+
+- block:        
+    - name: Ensuring we have DocRoot for imported mm2 archives (.html files for pipermail)
+      ansible.builtin.file:
+        path: "{{ mailman3_mm2_archives_dir }}"
+        state: directory 
       
+  tags:
+    - mailman2-archives
+
+
 - name: Ensuring backup user and jobs
   include_role:
     name: centos-backup
@@ -290,5 +299,6 @@
     - centos_role: mailman3
     - role_backup_folders:
         - /var/lib/mailman3
+        - "{{ mailman3_mm2_archives_dir }}"
   tags:
     - backup

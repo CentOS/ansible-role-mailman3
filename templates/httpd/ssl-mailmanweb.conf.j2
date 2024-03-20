@@ -10,10 +10,13 @@
  Header always set Referrer-Policy "same-origin"
  RequestHeader set X-Forwarded-Proto 'https' env=HTTPS
 
-	
+# Web ui	
 Alias /favicon.ico {{ mailman3_static_root }}/favicon.ico
 Alias /robots.txt  {{ mailman3_static_root }}/robots.txt
 Alias /static      {{ mailman3_static_root }}/
+
+# Imported mailman2 archives/html files (aka pipermail)
+Alias /pipermail   {{ mailman3_mm2_archives_dir }}
 
 # Redirecting to hyperkitty if nothing is specified
 RewriteEngine on
@@ -21,13 +24,22 @@ RewriteRule  ^/$    /hyperkitty [R,L]
 
 ProxyPreserveHost On
 ProxyRequests off
+
 # Not redirecting/proxying static content (served locally)
 ProxyPass /static !
+ProxyPass /pipermail !
+
 # Proxying to gunicorn mailmanweb backend
 ProxyPass / http://127.0.0.1:8000/
 ProxyPassReverse / http://127.0.0.1:8000/
 
 <Directory "{{ mailman3_static_root }}">
+    Order deny,allow
+    Allow from all
+    Require all granted
+</Directory>
+
+<Directory "{{ mailman3_mm2_archives_dir }}">
     Order deny,allow
     Allow from all
     Require all granted

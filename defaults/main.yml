@@ -48,6 +48,10 @@ mailman3_static_root: /var/www/mailman-static
 # Proxying through httpd/apache (ending TLS connection)
 mailman3_httpd_hostname: lists.dev.centos.org
 
+# For mailman2 imported static archives (aka '/pipermail/<list_name>')
+# We'll just create a directory and import/copy back .html file for selected lists
+mailman3_mm2_archives_dir: /var/www/mailman2-archives
+
 # OpenID-connect settings
 # Attention that you should ensure that callback/redirect_url set at the provider side will end with /
 # see https://docs.allauth.org/en/latest/socialaccount/providers/openid_connect.html#openid-connect
