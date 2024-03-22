@@ -59,6 +59,8 @@
   register: mailman3_systemd_override  
   notify:
     - restart_mailman3_core
+  tags:
+    - systemd 
 
 - name: Configuring mailman3 core
   ansible.builtin.template:
@@ -79,12 +81,17 @@
     owner: mailman
     group: mailman
 
-- name: Ensuring mailman-core is started
+- name: Ensuring mailman-core services are started
   ansible.builtin.systemd:
-    name: mailman3
+    name: "{{ item }}"
     state: started
     daemon-reload: "{% if mailman3_systemd_override is changed %}yes{% else %}no{% endif %}"
     enabled: True
+  with_items:
+    - mailman3.service
+    - mailman3-digests.timer
+  tags:
+    - systemd
 
 # Postorius/Hyperkitty config
 # These are django applications 
