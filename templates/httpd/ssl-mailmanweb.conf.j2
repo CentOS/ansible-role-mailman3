@@ -28,6 +28,8 @@ ProxyRequests off
 # Not redirecting/proxying static content (served locally)
 ProxyPass /static !
 ProxyPass /pipermail !
+ProxyPass /favicon.ico !
+ProxyPass /robots.txt !
 
 # Proxying to gunicorn mailmanweb backend
 ProxyPass / http://127.0.0.1:8000/
