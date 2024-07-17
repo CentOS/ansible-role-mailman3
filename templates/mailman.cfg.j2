@@ -51,7 +51,7 @@ configuration: /etc/mailman3.d/hyperkitty.cfg
 
 {% for item in mailman3_log_items %}
 
-[loggin.{{ item }}]
+[logging.{{ item }}]
 level: {{ mailman3_log_level }}
 path: {{ mailman3_log_directory }}/{{ item }}.log
 
