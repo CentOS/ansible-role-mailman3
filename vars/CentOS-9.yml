@@ -2,6 +2,7 @@ mailman3_pkgs:
   - mailman3
   - hyperkitty
   - postorius
+  - python3-django4.2
   - python3-mailmanclient
   - python3-mailman-web
   - python3-mailman-hyperkitty

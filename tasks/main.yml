@@ -7,7 +7,7 @@
     - "{{ ansible_distribution }}.yml"
   tags:
     - vars
-
+    - always
 
 # Importing first postfix as mailman uses postmap to start its service
 - ansible.builtin.include_role:
@@ -40,11 +40,20 @@
     dest: /etc/yum.repos.d/centos-mailman3.repo
   tags:
     - yum
+    - repo
+
+- name: Ugly workaround as not fixed (yet) at .spec file for django3 to django4.2 update
+  shell:
+    cmd: "rpm -q {{ item }} && rpm -e --nodeps {{ item }}"
+  with_items:
+    - python3-django3
+    - python-django3-bash-completion
 
 - name: Installing required mailman3 packages
   yum: 
     name: "{{ mailman3_pkgs }}"
     state: installed
+  notify: restart_mailmanweb
 
 - name: Systemd snippet directory
   file:
