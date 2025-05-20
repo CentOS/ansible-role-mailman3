@@ -44,10 +44,12 @@
 
 - name: Ugly workaround as not fixed (yet) at .spec file for django3 to django4.2 update
   shell:
-    cmd: "rpm -q {{ item }} && rpm -e --nodeps {{ item }}"
+    cmd: "rpm -qa | grep -q {{ item }} && rpm -e --nodeps {{ item }} || exit 0"
   with_items:
     - python3-django3
     - python-django3-bash-completion
+  tags:
+    - workaround
 
 - name: Installing required mailman3 packages
   yum: 
