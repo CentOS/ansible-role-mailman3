@@ -61,3 +61,4 @@ mailman3_openidc_name: CentOS Account
 mailman3_openidc_server_url: https://id.centos.org/idp/openidc
 mailman3_openidc_client_id: mailman3
 mailman3_openidc_secret: boooooooooooooyoushouldnotreadthisasnotused
+mailman3_openidc_redirect_url: https://accounts.centos.org

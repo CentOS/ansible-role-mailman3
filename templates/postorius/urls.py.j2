@@ -45,9 +45,10 @@ urlpatterns = [
     # Django admin
     re_path(r'^admin/', admin.site.urls),
     re_path(r'', include('django_mailman3.urls')),
-    path('accounts/signup/', RedirectView.as_view(url='/'), name='account_signup'),
-    path('accounts/password/reset/', RedirectView.as_view(url='/'), name='account_reset_password'),
+    path('accounts/signup/', RedirectView.as_view(url='{{ mailman3_openidc_redirect_url }}/#register'), name='account_signup'),
+    path('accounts/password/reset/', RedirectView.as_view(url='{{ mailman3_openidc_redirect_url }}/forgot-password/ask'), name='account_reset_password'),
 ]
+
 
 
 #if settings.DEBUG:
