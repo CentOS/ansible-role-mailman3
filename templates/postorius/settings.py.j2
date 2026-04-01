@@ -75,7 +75,7 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE = [
-    #'allauth.account.middleware.AccountMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     # NOTE: Do not include DebugToolbarMiddleware in any production site.
     #'debug_toolbar.middleware.DebugToolbarMiddleware',
@@ -127,21 +127,31 @@ USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 {% if mailman3_auth_openidc %}
+# Settings to disable non-FAS login
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_SIGNUP_REDIRECT_URL = "/"
+SOCIALACCOUNT_ONLY = True
+
 # social auth providers (openid connect so far for us)
 SOCIALACCOUNT_PROVIDERS = {
-    'openid_connect': {
-        "SERVERS": [
+    "openid_connect": {
+        "APPS": [
             {
-                "id": "{{ mailman3_openidc_provider_id }}",
+                "provider_id": "{{ mailman3_openidc_provider_id }}",
                 "name": "{{ mailman3_openidc_name }}",
-                "server_url": "{{ mailman3_openidc_server_url }}",
-                #"token_auth_method": "client_secret_basic",
-                "APP": {
-                    "client_id": "{{ mailman3_openidc_client_id }}",
-                    "secret": "{{ mailman3_openidc_secret }}",
+                "client_id": "{{ mailman3_openidc_client_id }}",
+                "secret": "{{ mailman3_openidc_secret }}",
+                "settings": {
+                    "server_url": "{{ mailman3_openidc_server_url }}",
                 },
             },
-        ]
+        ],
+        # The following provider-specific settings will be used for all apps:
+        "SCOPE": [
+            "profile",
+            "email",
+            "openid",
+        ],
     }
 }
 
