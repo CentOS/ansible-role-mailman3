@@ -12,7 +12,6 @@
 
 # Web ui	
 Alias /favicon.ico {{ mailman3_static_root }}/favicon.ico
-Alias /robots.txt  {{ mailman3_static_root }}/robots.txt
 Alias /static      {{ mailman3_static_root }}/
 
 # Imported mailman2 archives/html files (aka pipermail)
@@ -20,6 +19,12 @@ Alias /pipermail   {{ mailman3_mm2_archives_dir }}
 
 # Redirecting to hyperkitty if nothing is specified
 RewriteEngine on
+{% if httpd_robots_block_ai_agents %}
+# httpd_robots_block_ai_agents boolean turned on so blocking all identified agents directly
+# This is coming from https://github.com/ai-robots-txt/ai.robots.txt/blob/main/.htaccess so update on regular basis
+RewriteCond %{HTTP_USER_AGENT} ({{ httpd_robots_block_ai_agents_list | map('replace', '-', '\\-') | map('replace', '.', '\\.')| map('replace', ' ', '\\ ') | join('|') }}) [NC]
+RewriteRule !^/?robots\.txt$ - [F]
+{% endif %}
 RewriteRule  ^/$    /hyperkitty [R,L] 
 
 ProxyPreserveHost On

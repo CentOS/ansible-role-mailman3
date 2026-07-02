@@ -259,6 +259,7 @@
         name: httpd
       vars:
         - httpd_tls: True
+        - httpd_robots_block_ai_agents: True
 
     - ansible.builtin.include_role:
         name: httpd
